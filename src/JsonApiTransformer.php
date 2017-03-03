@@ -98,7 +98,7 @@ class JsonApiTransformer extends Transformer
                 PropertyHelper::setResponseDataTypeAndId($this->mappings, $value),
                 DataAttributesHelper::setResponseDataAttributes($this->mappings, $value, $this->attributesCase),
                 DataLinksHelper::setResponseDataLinks($this->mappings, $value),
-                DataLinksHelper::setResponseDataRelationship($this->mappings, $value, $value)
+                DataLinksHelper::setResponseDataRelationship($this->mappings, $value, $value, $this->attributesCase)
             ),
         ];
 
