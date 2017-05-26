@@ -98,7 +98,11 @@ class DataAttributesHelper
                 && empty($mappings[$value[Serializer::CLASS_IDENTIFIER_KEY]])
             ) {
                 $copy = $value;
-                self::recursiveSetKeysToUnderScore($copy);
+
+                if ($attributesCase == 'snake_case') {
+                    self::recursiveSetKeysToUnderScore($copy);
+                }
+                
                 $attributes[$keyName] = $copy;
                 continue;
             }
