@@ -96,7 +96,7 @@ class JsonApiTransformer extends Transformer
         $data = [
             self::DATA_KEY => \array_merge(
                 PropertyHelper::setResponseDataTypeAndId($this->mappings, $value),
-                DataAttributesHelper::setResponseDataAttributes($this->mappings, $value, $this->attributesCase),
+                DataAttributesHelper::setResponseDataAttributes($this->mappings, $value),
                 DataLinksHelper::setResponseDataLinks($this->mappings, $value),
                 DataLinksHelper::setResponseDataRelationship($this->mappings, $value, $value, $this->attributesCase)
             ),
@@ -235,6 +235,7 @@ class JsonApiTransformer extends Transformer
 
         $this->setResponseLinks($value, $data);
         $this->setResponseVersion($data);
+        $this->setResponseMeta($data);
 
         return (empty($data['data'])) ? array_merge(['data' => []], $data) : $data;
     }
