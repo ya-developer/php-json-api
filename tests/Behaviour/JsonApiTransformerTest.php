@@ -137,6 +137,42 @@ JSON;
       },
       {
          "type":"user",
+         "id":"3",
+         "attributes":{
+            "name":"First Liker"
+         },
+         "links":{
+            "self":{
+               "href":"http://example.com/users/3"
+            },
+            "friends":{
+               "href":"http://example.com/users/3/friends"
+            },
+            "comments":{
+               "href":"http://example.com/users/3/comments"
+            }
+         }
+      },
+      {
+         "type":"user",
+         "id":"4",
+         "attributes":{
+            "name":"Second Liker"
+         },
+         "links":{
+            "self":{
+               "href":"http://example.com/users/4"
+            },
+            "friends":{
+               "href":"http://example.com/users/4/friends"
+            },
+            "comments":{
+               "href":"http://example.com/users/4/comments"
+            }
+         }
+      },
+      {
+         "type":"user",
          "id":"2",
          "attributes":{
             "name":"Barristan Selmy"
@@ -162,7 +198,7 @@ JSON;
                "accepted_at":"2015-07-19T00:00:00+00:00"
             },
             "comment":"Have no fear, sers, your king is safe.",
-            "oneDate" : {
+            "one_date" : {
                 "date" : "2015-07-18 12:13:00.000000",
                 "timezone_type": 1,
                 "timezone" : "+00:00"
@@ -174,6 +210,18 @@ JSON;
                   "type":"user",
                   "id":"2"
                }
+             },
+            "likes": {
+               "data": [
+                  { 
+                    "type": "user",
+                    "id":"3"
+                  },
+                  {  
+                    "type": "user",
+                    "id":"4"
+                  }
+                ]
             }
          },
          "links":{
@@ -837,6 +885,15 @@ JSON;
         $mapper->setClassMap([$postMapping->getClassName() => $postMapping]);
 
         $jsonApiJsonApiSerializer = new JsonApiTransformer($mapper);
+        $jsonApiJsonApiSerializer->setMeta(
+            [
+                'author' => [
+                    'name' => 'Nil Portugués Calderó',
+                    'email' => 'contact@nilportugues.com',
+                ],
+            ]
+        );
+        $jsonApiJsonApiSerializer->addMeta('is_devel', true);
 
         $expected = <<<JSON
 {
@@ -868,6 +925,13 @@ JSON;
          }
       }
    ],
+   "meta":{
+      "author":{
+         "name":"Nil Portugués Calderó",
+         "email":"contact@nilportugues.com"
+      },
+      "is_devel":true
+   },
    "jsonapi":{
       "version":"1.0"
    }
