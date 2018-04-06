@@ -143,6 +143,23 @@ class DataLinksHelper
                             }
                         }
                     }
+                } else {
+                    //Removes relationships related to the current resource if filtering include resources has been set.
+                    if (!empty($mappings[$parent[Serializer::CLASS_IDENTIFIER_KEY]]) &&
+                        !empty($mappings[$parent[Serializer::CLASS_IDENTIFIER_KEY]]->isFilteringIncludedResources())
+                    ) {
+                        foreach ($data[JsonApiTransformer::RELATIONSHIPS_KEY] as $position => $includedResource) {
+                            if (count($mappings[$parent[Serializer::CLASS_IDENTIFIER_KEY]]->getIncludedResources()) > 0 &&
+                                false === in_array(
+                                    $array[$propertyName][Serializer::CLASS_IDENTIFIER_KEY],
+                                    $mappings[$parent[Serializer::CLASS_IDENTIFIER_KEY]]->getIncludedResources(),
+                                    true
+                                )
+                            ) {
+                                unset($data[JsonApiTransformer::RELATIONSHIPS_KEY][$position]);
+                            }
+                        }
+                    }
                 }
             }
         }
