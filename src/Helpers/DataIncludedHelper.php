@@ -44,6 +44,7 @@ class DataIncludedHelper
                 if (\is_array($value)) {
                     foreach ($value as $inArrayValue) {
                         if (\is_array($inArrayValue)) {
+                            // No need for this, included resources are handled correctly by Include object.
                             // $inArrayValue = self::removeResourcesNotIncluded($mappings, $parentType, $inArrayValue);
 
                             self::setResponseDataIncluded($mappings, $inArrayValue, $data, $parentType);
@@ -307,11 +308,23 @@ class DataIncludedHelper
      */
     protected static function isDeleteableIncludedResource(array &$mappings, $parentType, $includeValue)
     {
+        // Original version
+        // =================
         // return !empty($mappings[$parentType])
         // && count($mappings[$parentType]->getIncludedResources()) > 0
         // && false === in_array($includeValue[Serializer::CLASS_IDENTIFIER_KEY], $mappings[$parentType]->getIncludedResources(), true);
+  
+        // Previously patched version
+        // ===========================
+        // return !empty($mappings[$parentType])
+        // && count($mappings[$parentType]->getIncludedResources()) == 0 // Everything is included unless set to be included with Include object.
+        // && false === in_array(
+        //     $includeValue[Serializer::CLASS_IDENTIFIER_KEY],
+        //     $mappings[$parentType]->getIncludedResources(), true);
         
-	if (empty($mappings[$parentType])) {
+        // New version
+        // =============
+	      if (empty($mappings[$parentType])) {
             return false;
         }
 

@@ -72,17 +72,22 @@ class DataAttributesHelper
     /**
      * @param \NilPortugues\Api\Mapping\Mapping[] $mappings
      * @param array                               $array
+     * @param string                              $attributesCase
      *
      * @return array
      */
-    public static function setResponseDataAttributes(array &$mappings, array &$array)
+    public static function setResponseDataAttributes(array &$mappings, array &$array, string $attributesCase)
     {
         $attributes = [];
         $type = $array[Serializer::CLASS_IDENTIFIER_KEY];
         $idProperties = RecursiveFormatterHelper::getIdProperties($mappings, $type);
 
         foreach ($array as $propertyName => $value) {
-            $keyName = self::transformToValidMemberName(RecursiveFormatterHelper::camelCaseToUnderscore($propertyName));
+            if ($attributesCase == 'snake_case') {
+                $propertyName = RecursiveFormatterHelper::camelCaseToUnderscore($propertyName);
+            }
+
+            $keyName = self::transformToValidMemberName($propertyName);
 
             if (\in_array($propertyName, $idProperties, true)) {
                 self::addIdPropertiesInAttribute($mappings, $type, $keyName, $value, $attributes);
@@ -93,7 +98,11 @@ class DataAttributesHelper
                 && empty($mappings[$value[Serializer::CLASS_IDENTIFIER_KEY]])
             ) {
                 $copy = $value;
-                self::recursiveSetKeysToUnderScore($copy);
+
+                if ($attributesCase == 'snake_case') {
+                    self::recursiveSetKeysToUnderScore($copy);
+                }
+                
                 $attributes[$keyName] = $copy;
                 continue;
             }
